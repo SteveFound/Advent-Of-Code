@@ -3,19 +3,20 @@ declare(strict_types = 1);
 
 /**
  * parseFile : Parse data file into an array
- * @param mixed $handle
+ * @param string $filename
  * 
  * @return array
  */
-function parseFile($handle): array
+function parseFile($filename): array
 {
     $totals = array();
 
     $idx = 0;
     $sumValues = 0;
-    if( $line = fgets($handle) ) {
+    $file = new SplFileObject($filename, "r");
+    if( !$file->eof() ) {
         do {
-            $line = trim($line);
+            $line = trim($file->fgets());
             if( strlen($line) > 0 ) {
                 $sumValues += (int)$line;
             } else {
@@ -23,7 +24,7 @@ function parseFile($handle): array
                 $sumValues = 0;
                 $idx++;
             }
-        } while (($line = fgets($handle)) !== false);
+        } while (!$file->eof());
     }
     if( $sumValues > 0) {
         $totals[$idx] = $sumValues;
@@ -33,9 +34,7 @@ function parseFile($handle): array
 }
 
 // Read the datafile into an array
-$handle = fopen("input.txt", "r") or die("Unable to open input file!");
-$elfTotals = parseFile($handle);
-fclose($handle);
+$elfTotals = parseFile("input.txt");
 
 // Reverse sort the array so highest value is in element 0 (Part 1)
 rsort($elfTotals);
