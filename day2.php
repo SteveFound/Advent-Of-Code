@@ -179,40 +179,6 @@ function getSymbols($line, $mode): array
     return $symbols;
 }
 
-
-
-function showRound( Symbol $elf, Symbol $player, $score): void
-{
-    switch($elf) {
-        case Symbol::Rock:
-            echo "Rock";
-            break;
-        case Symbol::Paper:
-            echo "Paper";
-            break;
-        case Symbol::Scissors:
-            echo "Scissors";
-            break;
-        default:
-            echo "???";
-    }
-    echo " V ";
-    switch($player) {
-        case Symbol::Rock:
-            echo "Rock";
-            break;
-        case Symbol::Paper:
-            echo "Paper";
-            break;
-        case Symbol::Scissors:
-            echo "Scissors";
-            break;
-        default:
-            echo "???";
-    }
-    echo " Score: " . $score . "\n";
-}
-
 $file = new SplFileObject("rps.txt", "r");
 $totalPart1 = 0;
 $totalPart2 = 0;
@@ -225,7 +191,6 @@ while( !$file->eof()) {
 
         $symbols = getSymbols($line, false);
         $score = scoreRound($symbols[0], $symbols[1]);
-        showRound($symbols[0], $symbols[1], $score);
         $totalPart2 += $score;
     }
 }
