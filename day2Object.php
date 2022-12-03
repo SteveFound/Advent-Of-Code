@@ -10,15 +10,6 @@ enum MatchScore: int
     case Draw = 3;
     case Win = 6;
 }
-
-enum MatchResult
-{
-    case Unknown;
-    case PlayerWin;
-    case Draw;
-    case PlayerLoss;
-}
-
 /**
  * Abstract classes cannot be instantiated. All symbol classes will extend it and provide concrete impementations.
  * class: AbstractSymbol
