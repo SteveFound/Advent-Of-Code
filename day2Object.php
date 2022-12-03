@@ -127,19 +127,14 @@ class SymbolFactory {
     /**
      * buildSymbols : Translates a line into an Elf and Player symbol.
      * 
-     * if $mode == true then
      * Elf: A = Rock, B = Paper, C = Scissors
      * Player : X = Rock, Y = Paper, Z = Scissors
-     * 
-     * if $mode == false
-     * Elf: A = Rock, B = Paper, C = Scissors
-     * Result : X = Loss, Y = Draw, Z = Win so the player character is chosen to get that result given the elf character.
      *   
      * @param string $line      A string containing 2 characters (as above) separated by a space
      * 
      * @return array  Element[0] contains the Elf symbol, Element[1] contains the player symbol
      */
-    public function buildSymbols($line, $mode = true): array
+    public function buildSymbols($line): array
     {
         $symbols = array();
 
@@ -147,12 +142,30 @@ class SymbolFactory {
         $characters = explode(' ', trim($line));
 
         $symbols[0] = $this->buildSymbolFromCharacter($characters[0]);
+        $symbols[1] = $this->buildSymbolFromCharacter($characters[1]);
 
-        if( $mode ) {
-            $symbols[1] = $this->buildSymbolFromCharacter($characters[1]);
-        } else {
-            $symbols[1] = $this->buildSymbolFromResult($characters[1], $symbols[0]);
-        }
+        return $symbols;
+    }
+
+    /**
+     * buildResult : Translates a line into an Elf and Player symbol.
+     * 
+     * Elf: A = Rock, B = Paper, C = Scissors
+     * Result : X = Loss, Y = Draw, Z = Win so the player character is chosen to get that result given the elf character.
+     *   
+     * @param string $line      A string containing 2 characters (as above) separated by a space
+     * 
+     * @return array  Element[0] contains the Elf symbol, Element[1] contains the player symbol that gives the result
+     */
+    public function buildResult($line): array
+    {
+        $symbols = array();
+
+        // characters will become a 2 element array holding the 2 player characters
+        $characters = explode(' ', trim($line));
+
+        $symbols[0] = $this->buildSymbolFromCharacter($characters[0]);
+        $symbols[1] = $this->buildSymbolFromResult($characters[1], $symbols[0]);
 
         return $symbols;
     }
@@ -189,7 +202,7 @@ while( !$file->eof()) {
     $line = trim($file->fgets());
     if( strlen($line) > 0) {
         $totalPart1 += scoreRound($builder->buildSymbols($line));
-        $totalPart2 += scoreRound($builder->buildSymbols($line, false));
+        $totalPart2 += scoreRound($builder->buildResult($line));
     }
 }
 echo "Part 1\n";
