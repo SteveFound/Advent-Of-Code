@@ -22,7 +22,7 @@ while( !$file->eof()) {
                 $totalpart1++;
         }
         // Check if either range overlaps the other
-        if( (($min1 <= $max2) && ($max1 >= $min2)) || (($min2 <= $max1) && ($max2 >= $min1)) ) {
+        if( ($min1 <= $max2) && ($max1 >= $min2) ) {
                 $totalpart2++;
         } 
     }
