@@ -6,22 +6,35 @@ declare(strict_types = 1);
  */
 class TreeNode
 {
-    public readonly int $size;
-    public readonly string $name;
+    public readonly int $size;                  // Only relavent for files
+    public readonly string $name;               // The name of the file or directory
 
-    public TreeNode | null $parent;
-    public SplDoublyLinkedList $children;
+    public TreeNode | null $parent;             // We need the parent so which node we are looking at for 'cd ..'
+    public SplDoublyLinkedList $children;       // Nodes for all directories and files in this node
 
+    /**
+     * __construct : Create a new directory or file node
+     * @param mixed $size                       // Size of the file... ignored for directories
+     * @param mixed $name                       // The name of the directory or file
+     * 
+     * @return void
+     */
     public function __construct( $size, $name ) {
         $this->size = $size;
         $this->name = $name;
-        $this->parent = null;
-        $this->children = new SplDoublyLinkedList();
+        $this->parent = null;                   // The parent directory... null means this the root
+        $this->children = new SplDoublyLinkedList();    // Linked list would do, but SPL doesn't have one
     }
 
+    /**
+     * addNode : Add a file or directory to this node
+     * @param TreeNode $child
+     * 
+     * @return void
+     */
     public function addNode( Treenode $child ) {
-        $child->parent = $this;
-        $this->children->push($child);
+        $child->parent = $this;               // This node is the childs parent
+        $this->children->push($child); 
     }
 }
 
@@ -30,9 +43,14 @@ class TreeNode
  */
 class TreeBuilder
 {
-    private TreeNode $root;
-    private TreeNode $current;
+    private TreeNode $root;                     // The root node of the tree (root directory)
+    private TreeNode $current;                  // The directory we are looking at (current directory)
 
+    /**
+     * __construct : Create an empty tree and make the current directory the root
+     * 
+     * @return void
+     */
     public function __construct() {
         $this->root = new TreeNode( 0, '/');
         $this->current = $this->root;
@@ -57,6 +75,7 @@ class TreeBuilder
             // cd to child directory
             default:
                 $found = false;
+                // If the directory exists, just make it the current directory
                 foreach( $this->current->children as $child ){
                     if( $child->name == $dir ) {
                         $this->current = $child;
@@ -64,7 +83,7 @@ class TreeBuilder
                         break;
                     }
                 }
-                // If child directory does not exist, create it.
+                // If child directory does not exist, add it to the current directory then make it the current directory
                 if( !$found ){
                     $node = new TreeNode(0, $dir);
                     $this->current->addNode($node);
@@ -75,6 +94,12 @@ class TreeBuilder
         return $this->current;
     }
 
+    /**
+     * processCommand : Handle a line from the input file
+     * @param string $cmd
+     * 
+     * @return void
+     */
     public function processCommand(string $cmd): void {
         $parts = explode(' ', $cmd);
         if( $parts[0] == '$' ) {
@@ -99,6 +124,11 @@ class TreeBuilder
         }
     }
 
+    /**
+     * getTree : Return the root node of the tree
+     * 
+     * @return TreeNode
+     */
     public function getTree() : TreeNode {
         return $this->root;
     }
