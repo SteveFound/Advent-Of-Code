@@ -165,7 +165,6 @@ class Controller {
     public function parse(string $cmd) {
         if( strlen($cmd) == 0 ) return;
 
-        echo "** " . $cmd . " **\n";
         $parts = explode(' ', $cmd);
         // Repeat count times
         for($moveCount = 0; $moveCount < (int)$parts[1]; $moveCount++) {
@@ -186,6 +185,7 @@ class Controller {
             }
 /**
  * Debug code which logs all the positions to the console using the __toString function in Position
+ *           echo "** " . $cmd . " **\n";
  *           echo "Head:[" . $this->head . "] Tails:[";
  *           for( $tailIdx = 0; $tailIdx < 9; $tailIdx++ ) {
  *               echo $this->tails[$tailIdx] . " ";
