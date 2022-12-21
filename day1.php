@@ -34,7 +34,7 @@ function parseFile($filename): array
 }
 
 // Read the datafile into an array
-$elfTotals = parseFile("input.txt");
+$elfTotals = parseFile("day1input.txt");
 
 // Reverse sort the array so highest value is in element 0 (Part 1)
 rsort($elfTotals);
